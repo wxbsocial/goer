@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/EventStore/EventStore-Client-Go v1.0.2
 	github.com/fatih/color v1.13.0
+	github.com/garyburd/redigo v1.6.3
 	github.com/gosuri/uitable v0.0.4
 	github.com/marmotedu/component-base v1.6.2
 	github.com/marmotedu/errors v1.0.2
@@ -12,4 +13,5 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.10.0
+	go.mongodb.org/mongo-driver v1.8.2
 )
