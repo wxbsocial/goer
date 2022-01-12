@@ -80,3 +80,12 @@ func (o *RedisOptions) NewPool() (*redis.Pool, error) {
 
 	return pool, nil
 }
+
+func (o *RedisOptions) NewPoolMust() *redis.Pool {
+	client, err := o.NewPool()
+	if err != nil {
+		panic(err)
+	}
+
+	return client
+}

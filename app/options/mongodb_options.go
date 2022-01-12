@@ -50,3 +50,12 @@ func (o *MongoDbOptions) NewClient(ctx context.Context) (*mongo.Client, error) {
 
 	return client, nil
 }
+
+func (o *MongoDbOptions) NewClientMust(ctx context.Context) *mongo.Client {
+	client, err := o.NewClient(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	return client
+}

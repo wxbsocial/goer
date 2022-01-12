@@ -44,3 +44,13 @@ func (o *ESDbOptions) NewClient() (*esdb.Client, error) {
 
 	return client, nil
 }
+
+func (o *ESDbOptions) NewClientMust() *esdb.Client {
+	client, err := o.NewClient()
+
+	if err != nil {
+		panic(err)
+	}
+
+	return client
+}

@@ -87,6 +87,7 @@ func (gs *gracefulShutdown) StartShutdown(mgr ShutdownManager) {
 	wg.Wait()
 
 	gs.reportError(mgr.ShutdownFinish())
+
 }
 
 func (gs *gracefulShutdown) reportError(err error) {
