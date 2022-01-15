@@ -33,7 +33,7 @@ type ctx struct {
 	context.Context
 }
 
-func NewMetadataContext(
+func WithMetadata(
 	parent context.Context,
 ) Context {
 
