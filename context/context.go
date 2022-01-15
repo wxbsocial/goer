@@ -7,31 +7,36 @@ import (
 	"time"
 )
 
-func Background() context.Context {
-	return context.Background()
+func Background() Context {
+	return newCtx(context.Background())
 }
 
-func TODO() context.Context {
-	return context.TODO()
+func TODO() Context {
+	return newCtx(context.TODO())
 }
 
-func WithCancel(parent context.Context) (ctx context.Context, cancel context.CancelFunc) {
-	return context.WithCancel(parent)
+func WithCancel(parent context.Context) (ctx Context, cancel context.CancelFunc) {
+	ctx0, cancel0 := context.WithCancel(parent)
+
+	return newCtx(ctx0), cancel0
 }
 
 func WithValue(parent context.Context, key interface{}, val interface{}) context.Context {
-	return context.WithValue(parent, key, val)
+	return newCtx(context.WithValue(parent, key, val))
+
 }
 
 func WithDealtime(parent context.Context, d time.Time) (ctx context.Context, cancel context.CancelFunc) {
-	return context.WithDeadline(parent, d)
+	ctx0, cancel0 := context.WithDeadline(parent, d)
+	return newCtx(ctx0), cancel0
 }
 
 func WithTimeout(parent context.Context, timeout time.Duration) (ctx context.Context, cancel context.CancelFunc) {
-	return context.WithTimeout(parent, timeout)
+	ctx0, cancel0 := context.WithTimeout(parent, timeout)
+	return newCtx(ctx0), cancel0
 }
 
-type MetadataContext interface {
+type Context interface {
 	context.Context
 
 	Metadata() Metadata
@@ -53,40 +58,40 @@ type MetadataContext interface {
 	GetUserName() (string, bool)
 }
 
-type metadataCtx struct {
+type ctx struct {
 	context.Context
 }
 
-func WithMetadata(
+func newCtx(
 	parent context.Context,
-) MetadataContext {
+) Context {
 
-	return &metadataCtx{
+	return &ctx{
 		Context: context.WithValue(parent, METADATA_KEY, make(Metadata)),
 	}
 }
 
-func (ctx *metadataCtx) Metadata() Metadata {
+func (ctx *ctx) Metadata() Metadata {
 	return ctx.Value(METADATA_KEY).(Metadata)
 }
 
-func (ctx *metadataCtx) Get(key string) (string, bool) {
+func (ctx *ctx) Get(key string) (string, bool) {
 	value, exist := ctx.Metadata()[MetadataKey(key)]
 
 	return value, exist
 }
 
-func (ctx *metadataCtx) Set(key string, value interface{}) {
+func (ctx *ctx) Set(key string, value interface{}) {
 	ctx.Metadata()[MetadataKey(key)] = fmt.Sprintf("%v", value)
 }
 
-func (ctx *metadataCtx) get(key MetadataKey) (string, bool) {
+func (ctx *ctx) get(key MetadataKey) (string, bool) {
 	value, exist := ctx.Metadata()[key]
 
 	return value, exist
 }
 
-func (ctx *metadataCtx) set(key MetadataKey, value interface{}) {
+func (ctx *ctx) set(key MetadataKey, value interface{}) {
 	ctx.Metadata()[key] = fmt.Sprintf("%v", value)
 }
 
@@ -100,51 +105,51 @@ const (
 	METADATA_KEY_USER_NAME      = MetadataKey("user-name")
 )
 
-func (ctx *metadataCtx) SetCorrelationId(id string) {
+func (ctx *ctx) SetCorrelationId(id string) {
 	ctx.set(METADATA_KEY_CORRELATION_ID, id)
 }
 
-func (ctx *metadataCtx) GetCorrelationId() (string, bool) {
+func (ctx *ctx) GetCorrelationId() (string, bool) {
 	return ctx.get(METADATA_KEY_CORRELATION_ID)
 }
 
-func (ctx *metadataCtx) SetMessageId(id string) {
+func (ctx *ctx) SetMessageId(id string) {
 	ctx.set(METADATA_KEY_MESSAGE_ID, id)
 }
 
-func (ctx *metadataCtx) GetMessageId() (string, bool) {
+func (ctx *ctx) GetMessageId() (string, bool) {
 	return ctx.get(METADATA_KEY_MESSAGE_ID)
 }
 
-func (ctx *metadataCtx) SetAppId(appId string) {
+func (ctx *ctx) SetAppId(appId string) {
 	ctx.set(METADATA_KEY_APP_ID, appId)
 }
 
-func (ctx *metadataCtx) GetAppId() (string, bool) {
+func (ctx *ctx) GetAppId() (string, bool) {
 	return ctx.get(METADATA_KEY_APP_ID)
 }
 
-func (ctx *metadataCtx) SetUserId(userId string) {
+func (ctx *ctx) SetUserId(userId string) {
 	ctx.set(METADATA_KEY_USER_ID, userId)
 }
 
-func (ctx *metadataCtx) GetUserId() (string, bool) {
+func (ctx *ctx) GetUserId() (string, bool) {
 	return ctx.get(METADATA_KEY_USER_ID)
 }
 
-func (ctx *metadataCtx) SetUserName(userName string) {
+func (ctx *ctx) SetUserName(userName string) {
 	ctx.set(METADATA_KEY_USER_NAME, userName)
 }
 
-func (ctx *metadataCtx) GetUserName() (string, bool) {
+func (ctx *ctx) GetUserName() (string, bool) {
 	return ctx.get(METADATA_KEY_USER_NAME)
 }
 
-func (ctx *metadataCtx) SetTimestamp(time time.Time) {
+func (ctx *ctx) SetTimestamp(time time.Time) {
 	ctx.set(METADATA_KEY_TIMESTAMP, fmt.Sprintf("%d", time.UnixMilli()))
 }
 
-func (ctx *metadataCtx) GetTimestamp() (time.Time, bool) {
+func (ctx *ctx) GetTimestamp() (time.Time, bool) {
 	if value, ok := ctx.get(METADATA_KEY_TIMESTAMP); ok {
 		if timestamp, err := strconv.ParseInt(value, 10, 64); err == nil {
 			return time.UnixMilli(timestamp), true
