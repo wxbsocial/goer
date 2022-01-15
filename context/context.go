@@ -36,6 +36,10 @@ func WithTimeout(parent context.Context, timeout time.Duration) (ctx context.Con
 	return newCtx(ctx0), cancel0
 }
 
+func WithMetadata(parent context.Context) Context {
+	return newCtx(parent)
+}
+
 type Context interface {
 	context.Context
 
