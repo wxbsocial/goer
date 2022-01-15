@@ -33,6 +33,30 @@ type ctx struct {
 	context.Context
 }
 
+func Background() context.Context {
+	return context.Background()
+}
+
+func TODO() context.Context {
+	return context.TODO()
+}
+
+func WithCancel(parent context.Context) (ctx context.Context, cancel context.CancelFunc) {
+	return context.WithCancel(parent)
+}
+
+func WithValue(parent context.Context, key interface{}, val interface{}) context.Context {
+	return context.WithValue(parent, key, val)
+}
+
+func WithDealtime(parent context.Context, d time.Time) (ctx context.Context, cancel context.CancelFunc) {
+	return context.WithDeadline(parent, d)
+}
+
+func WithTimeout(parent context.Context, timeout time.Duration) (ctx context.Context, cancel context.CancelFunc) {
+	return context.WithTimeout(parent, timeout)
+}
+
 func WithMetadata(
 	parent context.Context,
 ) Context {
