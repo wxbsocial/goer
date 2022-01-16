@@ -6,7 +6,7 @@ import (
 
 type MetadataKey string
 
-type Metadata map[MetadataKey]string
+type Metadata map[MetadataKey]interface{}
 
 func (metadata Metadata) Bytes() ([]byte, error) {
 
@@ -15,7 +15,7 @@ func (metadata Metadata) Bytes() ([]byte, error) {
 
 func ParseMetadata(bytes []byte) (Metadata, error) {
 
-	var metadata map[MetadataKey]string
+	var metadata map[MetadataKey]interface{}
 
 	if err := json.Unmarshal(bytes, &metadata); err != nil {
 
