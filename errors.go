@@ -1,8 +1,17 @@
 package goer
 
 import (
+	"errors"
 	"fmt"
 )
+
+var (
+	ErrRepeat = errors.New("repeat execute")
+)
+
+func IsRepeatError(err error) bool {
+	return errors.Is(err, ErrRepeat)
+}
 
 type BizError struct {
 	msg string
