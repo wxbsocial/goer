@@ -6,11 +6,11 @@ import (
 )
 
 var (
-	ErrRepeat = errors.New("repeat execute")
+	ErrIdempotent = errors.New("idempotent failed")
 )
 
-func IsRepeatError(err error) bool {
-	return errors.Is(err, ErrRepeat)
+func IsIdempotentError(err error) bool {
+	return errors.Is(err, ErrIdempotent)
 }
 
 type BizError struct {
