@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
+	md "github.com/wxbsocial/goer/metadata"
 )
 
 func Background() Context {
@@ -43,10 +45,10 @@ func WithMetadata(parent context.Context) Context {
 type Context interface {
 	context.Context
 
-	Metadata() Metadata
+	Metadata() md.Metadata
 
-	Get(key MetadataKey) (string, bool)
-	Set(key MetadataKey, value string)
+	Get(key md.MetadataKey) (string, bool)
+	Set(key md.MetadataKey, value string)
 
 	SetCorrelationId(id string)
 	GetCorrelationId() (string, bool)
@@ -71,32 +73,32 @@ func newCtx(
 ) Context {
 
 	return &ctx{
-		Context: context.WithValue(parent, METADATA_KEY, make(Metadata)),
+		Context: context.WithValue(parent, METADATA_KEY, make(md.Metadata)),
 	}
 }
 
-func (ctx *ctx) Metadata() Metadata {
-	return ctx.Value(METADATA_KEY).(Metadata)
+func (ctx *ctx) Metadata() md.Metadata {
+	return ctx.Value(METADATA_KEY).(md.Metadata)
 }
 
-func (ctx *ctx) Get(key MetadataKey) (string, bool) {
+func (ctx *ctx) Get(key md.MetadataKey) (string, bool) {
 	value, exist := ctx.Metadata()[key]
 
 	return value, exist
 }
 
-func (ctx *ctx) Set(key MetadataKey, value string) {
+func (ctx *ctx) Set(key md.MetadataKey, value string) {
 	ctx.Metadata()[key] = fmt.Sprintf("%v", value)
 }
 
 const (
-	METADATA_KEY                = MetadataKey("metadata")
-	METADATA_KEY_CORRELATION_ID = MetadataKey("correlation-id")
-	METADATA_KEY_MESSAGE_ID     = MetadataKey("message-id")
-	METADATA_KEY_TIMESTAMP      = MetadataKey("timestamp")
-	METADATA_KEY_APP_ID         = MetadataKey("app-id")
-	METADATA_KEY_USER_ID        = MetadataKey("user-id")
-	METADATA_KEY_USER_NAME      = MetadataKey("user-name")
+	METADATA_KEY                = md.MetadataKey("metadata")
+	METADATA_KEY_CORRELATION_ID = md.MetadataKey("correlation-id")
+	METADATA_KEY_MESSAGE_ID     = md.MetadataKey("message-id")
+	METADATA_KEY_TIMESTAMP      = md.MetadataKey("timestamp")
+	METADATA_KEY_APP_ID         = md.MetadataKey("app-id")
+	METADATA_KEY_USER_ID        = md.MetadataKey("user-id")
+	METADATA_KEY_USER_NAME      = md.MetadataKey("user-name")
 )
 
 func (ctx *ctx) SetCorrelationId(id string) {
