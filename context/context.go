@@ -45,9 +45,8 @@ type Context interface {
 
 	Metadata() Metadata
 
-	Get(key MetadataKey) (interface{}, bool)
-	Set(key MetadataKey, value interface{})
-	GetString(key MetadataKey) (string, bool)
+	Get(key MetadataKey) (string, bool)
+	Set(key MetadataKey, value string)
 
 	SetCorrelationId(id string)
 	GetCorrelationId() (string, bool)
@@ -80,19 +79,13 @@ func (ctx *ctx) Metadata() Metadata {
 	return ctx.Value(METADATA_KEY).(Metadata)
 }
 
-func (ctx *ctx) Get(key MetadataKey) (interface{}, bool) {
+func (ctx *ctx) Get(key MetadataKey) (string, bool) {
 	value, exist := ctx.Metadata()[key]
 
 	return value, exist
 }
 
-func (ctx *ctx) GetString(key MetadataKey) (string, bool) {
-	value, exist := ctx.Metadata()[key]
-
-	return value.(string), exist
-}
-
-func (ctx *ctx) Set(key MetadataKey, value interface{}) {
+func (ctx *ctx) Set(key MetadataKey, value string) {
 	ctx.Metadata()[key] = fmt.Sprintf("%v", value)
 }
 
@@ -111,7 +104,7 @@ func (ctx *ctx) SetCorrelationId(id string) {
 }
 
 func (ctx *ctx) GetCorrelationId() (string, bool) {
-	return ctx.GetString(METADATA_KEY_CORRELATION_ID)
+	return ctx.Get(METADATA_KEY_CORRELATION_ID)
 }
 
 func (ctx *ctx) SetMessageId(id string) {
@@ -119,7 +112,7 @@ func (ctx *ctx) SetMessageId(id string) {
 }
 
 func (ctx *ctx) GetMessageId() (string, bool) {
-	return ctx.GetString(METADATA_KEY_MESSAGE_ID)
+	return ctx.Get(METADATA_KEY_MESSAGE_ID)
 }
 
 func (ctx *ctx) SetAppId(appId string) {
@@ -127,7 +120,7 @@ func (ctx *ctx) SetAppId(appId string) {
 }
 
 func (ctx *ctx) GetAppId() (string, bool) {
-	return ctx.GetString(METADATA_KEY_APP_ID)
+	return ctx.Get(METADATA_KEY_APP_ID)
 }
 
 func (ctx *ctx) SetUserId(userId string) {
@@ -135,7 +128,7 @@ func (ctx *ctx) SetUserId(userId string) {
 }
 
 func (ctx *ctx) GetUserId() (string, bool) {
-	return ctx.GetString(METADATA_KEY_USER_ID)
+	return ctx.Get(METADATA_KEY_USER_ID)
 }
 
 func (ctx *ctx) SetUserName(userName string) {
@@ -143,7 +136,7 @@ func (ctx *ctx) SetUserName(userName string) {
 }
 
 func (ctx *ctx) GetUserName() (string, bool) {
-	return ctx.GetString(METADATA_KEY_USER_NAME)
+	return ctx.Get(METADATA_KEY_USER_NAME)
 }
 
 func (ctx *ctx) SetTimestamp(time time.Time) {
@@ -151,7 +144,7 @@ func (ctx *ctx) SetTimestamp(time time.Time) {
 }
 
 func (ctx *ctx) GetTimestamp() (time.Time, bool) {
-	if value, ok := ctx.GetString(METADATA_KEY_TIMESTAMP); ok {
+	if value, ok := ctx.Get(METADATA_KEY_TIMESTAMP); ok {
 		if timestamp, err := strconv.ParseInt(value, 10, 64); err == nil {
 			return time.UnixMilli(timestamp), true
 		}
