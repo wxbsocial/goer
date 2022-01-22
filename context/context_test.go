@@ -104,3 +104,37 @@ func TestGetUserName(t *testing.T) {
 	assert.Equal(t, id, id2)
 
 }
+
+func TestMetadataTransfer(t *testing.T) {
+	const (
+		msgId = "001"
+	)
+	ctx := Background()
+	ctx.SetMessageId(msgId)
+	assert.Equal(t, msgId, ctx.GetMessageId())
+
+	ctx2, _ := WithCancel(ctx)
+	assert.Equal(t, msgId, ctx2.GetMessageId())
+
+}
+
+func TestCancelContext(t *testing.T) {
+
+	ctx, cancel := WithCancel(Background())
+	ctx2 := WithValue(ctx, METADATA_KEY_APP_ID, "001")
+
+	select {
+	case <-ctx2.Done():
+		assert.True(t, false)
+	default:
+	}
+
+	cancel()
+
+	select {
+	case <-ctx2.Done():
+		assert.True(t, true)
+	default:
+	}
+
+}

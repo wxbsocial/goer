@@ -13,6 +13,12 @@ func (metadata Metadata) Bytes() ([]byte, error) {
 	return json.Marshal(metadata)
 }
 
+func (metadata Metadata) Union(other Metadata) {
+	for k, v := range other {
+		metadata[k] = v
+	}
+}
+
 func ParseMetadata(bytes []byte) (Metadata, error) {
 
 	var metadata map[MetadataKey]string
