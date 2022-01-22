@@ -1,7 +1,6 @@
 package context
 
 import (
-	"context"
 	"testing"
 	"time"
 
@@ -10,14 +9,14 @@ import (
 )
 
 func TestGetValue(t *testing.T) {
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	assert.NotNil(t, ctx.Value(METADATA_KEY))
 }
 
 func TestGetTimestamp(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	now := time.Now()
 	ctx.SetTimestamp(now)
@@ -30,7 +29,7 @@ func TestGetTimestamp(t *testing.T) {
 
 func TestGetCorrelationId(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	id := uuid.Must(uuid.NewV4()).String()
 
@@ -44,7 +43,7 @@ func TestGetCorrelationId(t *testing.T) {
 
 func TestGetMessageId(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	id := uuid.Must(uuid.NewV4()).String()
 
@@ -58,7 +57,7 @@ func TestGetMessageId(t *testing.T) {
 
 func TestGetAppId(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	id := uuid.Must(uuid.NewV4()).String()
 
@@ -72,7 +71,7 @@ func TestGetAppId(t *testing.T) {
 
 func TestGetUserId(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	id := uuid.Must(uuid.NewV4()).String()
 
@@ -86,7 +85,7 @@ func TestGetUserId(t *testing.T) {
 
 func TestGetUserName(t *testing.T) {
 
-	ctx := newCtx(context.Background())
+	ctx := Background()
 
 	id := uuid.Must(uuid.NewV4()).String()
 

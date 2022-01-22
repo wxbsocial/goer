@@ -10,36 +10,36 @@ import (
 )
 
 func Background() Context {
-	return newCtx(context.Background())
+	return newCtx(context.Background(), md.Metadata{})
 }
 
 func TODO() Context {
-	return newCtx(context.TODO())
+	return newCtx(context.TODO(), md.Metadata{})
 }
 
 func WithCancel(parent context.Context) (ctx Context, cancel context.CancelFunc) {
 	ctx0, cancel0 := context.WithCancel(parent)
 
-	return newCtx(ctx0), cancel0
+	return newCtx(ctx0, md.Metadata{}), cancel0
 }
 
 func WithValue(parent context.Context, key interface{}, val interface{}) context.Context {
-	return newCtx(context.WithValue(parent, key, val))
+	return newCtx(context.WithValue(parent, key, val), md.Metadata{})
 
 }
 
 func WithDealtime(parent context.Context, d time.Time) (ctx context.Context, cancel context.CancelFunc) {
 	ctx0, cancel0 := context.WithDeadline(parent, d)
-	return newCtx(ctx0), cancel0
+	return newCtx(ctx0, md.Metadata{}), cancel0
 }
 
 func WithTimeout(parent context.Context, timeout time.Duration) (ctx context.Context, cancel context.CancelFunc) {
 	ctx0, cancel0 := context.WithTimeout(parent, timeout)
-	return newCtx(ctx0), cancel0
+	return newCtx(ctx0, md.Metadata{}), cancel0
 }
 
-func WithMetadata(parent context.Context) Context {
-	return newCtx(parent)
+func WithMetadata(parent context.Context, metadata md.Metadata) Context {
+	return newCtx(parent, metadata)
 }
 
 type Context interface {
@@ -70,10 +70,11 @@ type ctx struct {
 
 func newCtx(
 	parent context.Context,
+	metadata md.Metadata,
 ) Context {
 
 	return &ctx{
-		Context: context.WithValue(parent, METADATA_KEY, make(md.Metadata)),
+		Context: context.WithValue(parent, METADATA_KEY, metadata),
 	}
 }
 
