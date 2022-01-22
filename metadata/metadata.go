@@ -24,3 +24,8 @@ func ParseMetadata(bytes []byte) (Metadata, error) {
 
 	return metadata, nil
 }
+
+type MetadataItem struct {
+	Key   string
+	Value string
+}
