@@ -21,10 +21,18 @@ func TestGetTimestamp(t *testing.T) {
 	now := time.Now()
 	ctx.SetTimestamp(now)
 
-	ts, ok := ctx.GetTimestamp()
-	assert.True(t, ok)
+	ts := ctx.GetTimestamp()
 
 	assert.Equal(t, now.UnixMilli(), ts.UnixMilli())
+}
+
+func TestGetTimestampWhenNotSet(t *testing.T) {
+
+	ctx := Background()
+
+	ts := ctx.GetTimestamp()
+
+	assert.Equal(t, time.Time{}.UnixMilli(), ts.UnixMilli())
 }
 
 func TestGetCorrelationId(t *testing.T) {
@@ -35,8 +43,8 @@ func TestGetCorrelationId(t *testing.T) {
 
 	ctx.SetCorrelationId(id)
 
-	id2, ok := ctx.GetCorrelationId()
-	assert.True(t, ok)
+	id2 := ctx.GetCorrelationId()
+
 	assert.Equal(t, id, id2)
 
 }
@@ -49,8 +57,8 @@ func TestGetMessageId(t *testing.T) {
 
 	ctx.SetMessageId(id)
 
-	id2, ok := ctx.GetMessageId()
-	assert.True(t, ok)
+	id2 := ctx.GetMessageId()
+
 	assert.Equal(t, id, id2)
 
 }
@@ -63,8 +71,8 @@ func TestGetAppId(t *testing.T) {
 
 	ctx.SetAppId(id)
 
-	id2, ok := ctx.GetAppId()
-	assert.True(t, ok)
+	id2 := ctx.GetAppId()
+
 	assert.Equal(t, id, id2)
 
 }
@@ -77,8 +85,8 @@ func TestGetUserId(t *testing.T) {
 
 	ctx.SetUserId(id)
 
-	id2, ok := ctx.GetUserId()
-	assert.True(t, ok)
+	id2 := ctx.GetUserId()
+
 	assert.Equal(t, id, id2)
 
 }
@@ -91,8 +99,8 @@ func TestGetUserName(t *testing.T) {
 
 	ctx.SetUserName(id)
 
-	id2, ok := ctx.GetUserName()
-	assert.True(t, ok)
+	id2 := ctx.GetUserName()
+
 	assert.Equal(t, id, id2)
 
 }

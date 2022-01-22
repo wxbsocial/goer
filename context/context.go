@@ -51,18 +51,22 @@ type Context interface {
 	Set(key md.MetadataKey, value string)
 
 	SetCorrelationId(id string)
-	GetCorrelationId() (string, bool)
+	GetCorrelationId() string
 	SetMessageId(messageId string)
-	GetMessageId() (string, bool)
+	GetMessageId() string
 	SetTimestamp(time time.Time)
-	GetTimestamp() (time.Time, bool)
+	GetTimestamp() time.Time
 	SetAppId(appId string)
-	GetAppId() (string, bool)
+	GetAppId() string
 	SetUserId(userId string)
-	GetUserId() (string, bool)
+	GetUserId() string
 	SetUserName(userName string)
-	GetUserName() (string, bool)
+	GetUserName() string
 }
+
+var (
+	EMPTY_TIME = time.Time{}
+)
 
 type ctx struct {
 	context.Context
@@ -106,53 +110,53 @@ func (ctx *ctx) SetCorrelationId(id string) {
 	ctx.Set(METADATA_KEY_CORRELATION_ID, id)
 }
 
-func (ctx *ctx) GetCorrelationId() (string, bool) {
-	return ctx.Get(METADATA_KEY_CORRELATION_ID)
+func (ctx *ctx) GetCorrelationId() string {
+	return ctx.Metadata()[METADATA_KEY_CORRELATION_ID]
 }
 
 func (ctx *ctx) SetMessageId(id string) {
 	ctx.Set(METADATA_KEY_MESSAGE_ID, id)
 }
 
-func (ctx *ctx) GetMessageId() (string, bool) {
-	return ctx.Get(METADATA_KEY_MESSAGE_ID)
+func (ctx *ctx) GetMessageId() string {
+	return ctx.Metadata()[METADATA_KEY_MESSAGE_ID]
 }
 
 func (ctx *ctx) SetAppId(appId string) {
 	ctx.Set(METADATA_KEY_APP_ID, appId)
 }
 
-func (ctx *ctx) GetAppId() (string, bool) {
-	return ctx.Get(METADATA_KEY_APP_ID)
+func (ctx *ctx) GetAppId() string {
+	return ctx.Metadata()[METADATA_KEY_APP_ID]
 }
 
 func (ctx *ctx) SetUserId(userId string) {
 	ctx.Set(METADATA_KEY_USER_ID, userId)
 }
 
-func (ctx *ctx) GetUserId() (string, bool) {
-	return ctx.Get(METADATA_KEY_USER_ID)
+func (ctx *ctx) GetUserId() string {
+	return ctx.Metadata()[METADATA_KEY_USER_ID]
 }
 
 func (ctx *ctx) SetUserName(userName string) {
 	ctx.Set(METADATA_KEY_USER_NAME, userName)
 }
 
-func (ctx *ctx) GetUserName() (string, bool) {
-	return ctx.Get(METADATA_KEY_USER_NAME)
+func (ctx *ctx) GetUserName() string {
+	return ctx.Metadata()[METADATA_KEY_USER_NAME]
 }
 
 func (ctx *ctx) SetTimestamp(time time.Time) {
 	ctx.Set(METADATA_KEY_TIMESTAMP, fmt.Sprintf("%d", time.UnixMilli()))
 }
 
-func (ctx *ctx) GetTimestamp() (time.Time, bool) {
+func (ctx *ctx) GetTimestamp() time.Time {
 	if value, ok := ctx.Get(METADATA_KEY_TIMESTAMP); ok {
 		if timestamp, err := strconv.ParseInt(value, 10, 64); err == nil {
-			return time.UnixMilli(timestamp), true
+			return time.UnixMilli(timestamp)
 		}
 	}
 
-	return time.Time{}, false
+	return EMPTY_TIME
 
 }
