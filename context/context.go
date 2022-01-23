@@ -9,18 +9,21 @@ import (
 	md "github.com/wxbsocial/goer/metadata"
 )
 
+type CancelFunc func()
+
 func Background() Context {
 	return newCtx(context.Background())
 }
 
 func TODO() Context {
+
 	return newCtx(context.TODO())
 }
 
-func WithCancel(parent context.Context) (ctx Context, cancel context.CancelFunc) {
+func WithCancel(parent context.Context) (ctx Context, cancel CancelFunc) {
 	ctx0, cancel0 := context.WithCancel(parent)
 
-	return newCtx(ctx0), cancel0
+	return newCtx(ctx0), CancelFunc(cancel0)
 }
 
 func WithValue(parent context.Context, key interface{}, val interface{}) context.Context {
